@@ -7,11 +7,11 @@ import itertools
 from sklearn.model_selection import train_test_split
 from sklearn.ensemble import RandomForestRegressor
 from sklearn.linear_model import LogisticRegression
-from sklearn.metrics import confusion_matrix, precision_score, f1_score, recall_score
+from sklearn.metrics import confusion_matrix, precision_score, f1_score, recall_score, accuracy_score
 sns.set(style='white')
 
 # Load Data
-dataset = pd.read_csv('iris.csv')
+dataset = pd.read_csv("iris.csv")
 
 # Feature names (Ensure no extra spaces or parentheses)
 dataset.columns = [colname.strip(' (cm)').replace(" ", "_") for colname in dataset.columns.tolist()]
@@ -22,7 +22,7 @@ dataset['sepal_length_width_ratio'] = dataset['sepal_length'] / dataset['sepal_w
 dataset['petal_length_width_ratio'] = dataset['petal_length'] / dataset['petal_width']
 
 # Select Features (Correct the duplicate column issue)
-dataset = dataset[['sepal_length', 'sepal_width', 'petal_length', 'petal_width', 
+dataset = dataset[['sepal_length', 'sepal_width', 'petal_length', 'petal_width',
                    'sepal_length_width_ratio', 'petal_length_width_ratio', 'target']]
 
 # Split Data
@@ -63,6 +63,13 @@ recall_rf = recall_score(y_test, predictions_rf_class, average='micro')
 # Accuracy
 train_acc_rf = rf_reg.score(X_train, y_train) * 100
 test_acc_rf = rf_reg.score(X_test, y_test) * 100
+
+# Accuracy of the models (classification accuracy on the test set)
+accuracy_lr = accuracy_score(y_test, predictions_lr) * 100
+accuracy_rf = accuracy_score(y_test, predictions_rf_class) * 100
+
+print("Logistic Regression Accuracy: {:.2f}%".format(accuracy_lr))
+print("Random Forest Accuracy: {:.2f}%".format(accuracy_rf))
 
 # Confusion Matrix Plotting Function
 def plot_cm(cm, target_name, title="Confusion Matrix", cmap=None, normalize=True):
